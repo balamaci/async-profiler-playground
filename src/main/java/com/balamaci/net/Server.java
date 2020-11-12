@@ -34,7 +34,7 @@ public class Server {
                  socket) {
 
                 while (true) {
-                    dos.writeUTF("Tell me your name");
+                    dos.writeUTF("What is your name?");
                     String name = dis.readUTF();
                     dos.writeUTF("Hello " + name);
                 }
