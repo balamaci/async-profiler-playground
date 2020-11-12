@@ -3,7 +3,7 @@
 1. Looking at a simple blocking echo server
 
 ## Running the app 
-We're using a docker image of async-profiler as a base for jlib maven plugin. 
+We're using a docker image of async-profiler as a base for jlib maven plugin from [openjdk-x-dbg-asyncprofiler](https://github.com/petrbouda/openjdk-x-dbg-asyncprofiler)
 
 Start container 
 ```bash
