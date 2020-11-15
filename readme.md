@@ -22,13 +22,16 @@ docker exec -ti tested-app profiler.sh 30 -t -f /tmp/asyncprofiler/cpu.svg 1
 ![Example](https://raw.githubusercontent.com/balamaci/async-profiler-playground/master/cpu.svg)
 
 Color codes are:
-green == Java, yellow == C++, red == user-mode native, orange == kernel
+green == Java
+yellow == C++
+red == user-mode native 
+orange == kernel
 
-Of interest is **SocketDispatcher.read0** if we look in the JVM [source code](https://github.com/openjdk/jdk/blob/d7a0fb9ebc898e76207c27166b81630e837a064a/src/java.base/unix/classes/sun/nio/ch/SocketDispatcher.java#L79), read0 is just a native method called through JNI, which we can trace to
+Of interest is **SocketDispatcher.read0** if we look in the JVM [source code](https://github.com/openjdk/jdk/blob/d7a0fb9ebc898e76207c27166b81630e837a064a/src/java.base/unix/classes/sun/nio/ch/SocketDispatcher.java#L79), read0 is just a native method called through JNI, which we can trace to a .c file.
 There is a JNI convention how the native method looks like in the .c file containing package name and class _Java_sun_nio_ch_SocketDispatcher_read0_ 
 
 The native call [SocketDispatcher.c](https://github.com/openjdk/jdk/blob/d7a0fb9ebc898e76207c27166b81630e837a064a/src/java.base/unix/native/libnio/ch/SocketDispatcher.c)
-we see it's calling the POSIX **read**
+we see it's calling the POSIX **read** https://man7.org/linux/man-pages/man2/read.2.html
 ```c
 jint n = read(fd, buf, len);
 ```
