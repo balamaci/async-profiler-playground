@@ -1,52 +1,42 @@
 package com.balamaci.mem;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.*;
 
-public class Start {
-
-    public static final Logger log = LoggerFactory.getLogger(Start.class);
+public class HeapAllocationStart {
 
     public static final Set<Integer> FILLED_THREADS = Set.of(1, 3, 6, 7, 9, 40);
 
-    /*public static void main(String[] args) throws Exception {
-        LocalDateTime.now();
+    public static void main(String[] args) throws Exception {
         ExecutorService executorService = Executors.newCachedThreadPool();
-
-        CountDownLatch countDownLatch = new CountDownLatch(1);
-        SecureRandom random = new SecureRandom();
 
         for(int i=0; i < 10; i++) {
             int id = i;
             executorService.submit(() -> {
+                ThreadLocalRandom random = ThreadLocalRandom.current();
+
                 while (true) {
                     List<FxQuote> quotes = new ArrayList<>();
                     List<Customer> customers = new ArrayList<>();
                     if (FILLED_THREADS.contains(id)) {
                         if(random.nextInt(2) == 0) {
-                            log.info("Quotes {}", id);
+                            System.out.println("Quotes " + id);
                             fillQuotes(quotes);
                         } else {
-                            log.info("Customers {}", id);
+                            System.out.println("Customers " + id);
                             fillCustomers(customers);
                         }
                     }
 
                     sleep();
                 }
-*//*
-                try {
-                    countDownLatch.await();
-                } catch (InterruptedException ignored) { }
-*//*
             });
         }
 
         executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.MINUTES);
-    }*/
+    }
 
     private static void fillQuotes(List<FxQuote> holder) {
         for(int j=0; j < 1000; j++) {
