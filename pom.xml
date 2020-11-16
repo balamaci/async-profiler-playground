@@ -15,26 +15,11 @@
     </properties>
 
     <dependencies>
-        <!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
         <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>2.6</version>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+            <version>4.1.54.Final</version>
         </dependency>
-
-        <!-- Logging -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency>
-
     </dependencies>
 
     <build>
@@ -66,7 +51,10 @@
                         <image>tested-app:latest</image>
                     </to>
                     <container>
-                        <mainClass>com.balamaci.net.Server</mainClass>
+<!--                        <mainClass>com.balamaci.mem.HeapAllocationStart</mainClass>-->
+<!--                        <mainClass>com.balamaci.net.Server</mainClass>-->
+                        <mainClass>com.balamaci.net.async.netty.NettyServerStart</mainClass>
+<!--                        <mainClass>com.balamaci.mem.UnsafeTest</mainClass>-->
                         <jvmFlags>
                             <jvmFlag>-XX:+UnlockDiagnosticVMOptions</jvmFlag>
                             <jvmFlag>-XX:+DebugNonSafepoints</jvmFlag>
