@@ -47,11 +47,10 @@ We've also caught a glimpse of the JVM C2 compiler spending some resources doing
 
 ![NIO](https://raw.githubusercontent.com/balamaci/async-profiler-playground/master/netty.svg)
 
-We've implemented a simple TCP Server - Client communication via TCP using Netty framework through the NIO transfer.
+We've implemented a simple TCP [Server]() - Client communication via TCP using Netty framework using NIO.
 Under the hood Netty is an event based framework allowing to do non blocking IO. 
 We can see a call to [epoll_wait](https://man7.org/linux/man-pages/man2/epoll_wait.2.html). 
-By using **EPoll** Netty is capable of periodically checking multiple sockets(actually file descriptors) that there is data waiting to be read from 
-them without having to block indefinitely waiting for data to arrive on a specific socket. 
+By using **EPoll** is capable of getting notified when certain sockets(actually file descriptors) have data waiting to be read from them by periodically polling this info, without having to block indefinitely waiting for data to arrive on a specific socket. 
 
 When we want to write data to the socket, Java NIO makes use of **DirectByteBuffers**. 
 DirectByteBuffer are **native memory** locations(outside of JVM heap) which the GC doesn't move - when compacting memory-(it does keep track of them and can dispose of them when they're no longer referenced) and can be written directly into the socket. 
