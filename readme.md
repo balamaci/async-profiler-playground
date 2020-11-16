@@ -12,7 +12,7 @@ docker run -it --rm --network host --name tested-app -v /tmp/asyncprofiler:/tmp/
 
 start the profiling
 ```bash
-docker exec -ti tested-app profiler.sh 30 -t -f /tmp/asyncprofiler/cpu.svg 1
+docker exec -ti tested-app profiler.sh -d 30 -s -t -f /tmp/asyncprofiler/cpu.svg 1
 ```
 
 ## What we see
@@ -39,4 +39,25 @@ Same goes for **SocketDispatcher.write**, just that it delegates first to **File
 
 Next in line we notice the jump from user space -> kernel space **do_syscall_64** and then some kernel internal calls to read/write from the socket. 
 
+
+
 We've also caught a glimpse of the JVM C2 compiler spending some resources doing JIT optimizing(in the left part) as the JVM notices some methods are invoked often.
+
+### Profiling a simple TCP Netty NIO Client - Server
+
+![NIO](https://raw.githubusercontent.com/balamaci/async-profiler-playground/master/netty.svg)
+
+We've implemented a simple TCP Server - Client communication via TCP using Netty framework through the NIO transfer.
+Under the hood Netty is an event based framework allowing to do non blocking IO. 
+We can see a call to [epoll_wait](https://man7.org/linux/man-pages/man2/epoll_wait.2.html). 
+By using **EPoll** Netty is capable of periodically checking multiple sockets(actually file descriptors) that there is data waiting to be read from 
+them without having to block indefinitely waiting for data to arrive on a specific socket. 
+
+When we want to write data to the socket, Java NIO makes use of **DirectByteBuffers**. 
+DirectByteBuffer are **native memory** locations(outside of JVM heap) which the GC doesn't move - when compacting memory-(it does keep track of them and can dispose of them when they're no longer referenced) and can be written directly into the socket. 
+
+We still see the **_do_syscall_64** which means user->kernel context switch, and this reduction on context switching is improved on the new [io_uring](https://unixism.net/loti/what_is_io_uring.html) approach and we'll take a look in the future.
+
+Next we'll also take a look if we can see anything special with using platform specific Epoll implementation through JNI.
+
+### Profiling a simple TCP Netty EPoll Client - Server
