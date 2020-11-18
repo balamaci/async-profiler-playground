@@ -5,7 +5,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-import static com.balamaci.net.async.netty.ServerChannelHandler.ECHO_STR;
+import static com.balamaci.net.async.netty.ServerChannelHandler.HELLO_STR;
 
 public class ClientChannelHandler extends SimpleChannelInboundHandler<String>  {
 
@@ -15,9 +15,9 @@ public class ClientChannelHandler extends SimpleChannelInboundHandler<String>  {
 
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, String readStr) throws Exception {
+    protected void channelRead0(ChannelHandlerContext ctx, String readStr) {
         System.out.println("Received: " + readStr);
-        if(readStr.equals(ECHO_STR)) {
+        if(readStr.equals(HELLO_STR)) {
             ctx.channel().writeAndFlush(persons[threadLocalRandom.nextInt(10)]);
         }
     }

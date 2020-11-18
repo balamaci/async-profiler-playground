@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 
 public class ServerChannelHandler extends SimpleChannelInboundHandler<String> {
 
-    public static final String ECHO_STR = "Hello, what is your name?";
+    public static final String HELLO_STR = "Hello, what is your name?";
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
@@ -16,14 +16,14 @@ public class ServerChannelHandler extends SimpleChannelInboundHandler<String> {
 
         ScheduledThreadPoolExecutor poolExecutor = new ScheduledThreadPoolExecutor(1);
         poolExecutor.scheduleAtFixedRate(() -> {
-            ctx.channel().writeAndFlush(ECHO_STR); // (2)
+            ctx.channel().writeAndFlush(HELLO_STR);
         }, 100, 500, TimeUnit.MILLISECONDS);
     }
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, String readStr) throws Exception {
         System.out.println(ctx.channel().remoteAddress() + " " + readStr);
-        ctx.channel().writeAndFlush("Hello " + readStr); // (2)
+        ctx.channel().writeAndFlush("Hello " + readStr);
     }
 
     @Override

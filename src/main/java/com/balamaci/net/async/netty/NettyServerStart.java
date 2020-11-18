@@ -2,10 +2,14 @@ package com.balamaci.net.async.netty;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.string.StringDecoder;
+import io.netty.handler.codec.string.StringEncoder;
 
 public class NettyServerStart {
 
@@ -13,14 +17,27 @@ public class NettyServerStart {
 
     public static void main(String[] args) {
         // Event loop group to Handle I/O operations for channel
-        EventLoopGroup bossGroup = new NioEventLoopGroup();	// (1)
-        EventLoopGroup workerGroup = new NioEventLoopGroup(); // (2)
+        EventLoopGroup bossGroup = new NioEventLoopGroup();
+        EventLoopGroup workerGroup = new NioEventLoopGroup();
+
+//        --uncomment for native transport
+//        EventLoopGroup bossGroup = new EpollEventLoopGroup();
+//        EventLoopGroup workerGroup = new EpollEventLoopGroup();
+
 
         ServerBootstrap serverBootstrap = new ServerBootstrap();
         serverBootstrap
                 .group(bossGroup, workerGroup) // associate event loop to channel
-                .channel(NioServerSocketChannel.class) //
-                .childHandler(new ServerConnectionInitializer()) // Add channel initializer
+                .channel(NioServerSocketChannel.class)
+//                .channel(EpollServerSocketChannel.class) --uncomment for native transport
+                .childHandler(new ChannelInitializer<SocketChannel>() {
+                    @Override
+                    protected void initChannel(SocketChannel socketChannel) throws Exception {
+                        socketChannel.pipeline().addLast(new StringEncoder());
+                        socketChannel.pipeline().addLast(new StringDecoder());
+                        socketChannel.pipeline().addLast(new ServerChannelHandler());
+                    }
+                }) // Add channel initializer
                 .childOption(ChannelOption.SO_KEEPALIVE, true);
 
         try {
@@ -34,7 +51,8 @@ public class NettyServerStart {
             e.printStackTrace();
         } finally {
             System.out.println("closing");
-//            eventLoopGroup.shutdownGracefully();
+            workerGroup.shutdownGracefully();
+            bossGroup.shutdownGracefully();
         }
     }
 
