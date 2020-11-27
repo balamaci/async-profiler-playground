@@ -5,11 +5,11 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
-import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
+import io.netty.incubator.channel.uring.IOUringEventLoopGroup;
+import io.netty.incubator.channel.uring.IOUringServerSocketChannel;
 
 public class NettyServerStart {
 
@@ -17,8 +17,8 @@ public class NettyServerStart {
 
     public static void main(String[] args) {
         // Event loop group to Handle I/O operations for channel
-        EventLoopGroup bossGroup = new NioEventLoopGroup();
-        EventLoopGroup workerGroup = new NioEventLoopGroup();
+        EventLoopGroup bossGroup = new IOUringEventLoopGroup(1);
+        EventLoopGroup workerGroup = new IOUringEventLoopGroup(1);
 
 //        --uncomment for native transport
 //        EventLoopGroup bossGroup = new EpollEventLoopGroup();
@@ -28,8 +28,9 @@ public class NettyServerStart {
         ServerBootstrap serverBootstrap = new ServerBootstrap();
         serverBootstrap
                 .group(bossGroup, workerGroup) // associate event loop to channel
-                .channel(NioServerSocketChannel.class)
+//                .channel(NioServerSocketChannel.class)
 //                .channel(EpollServerSocketChannel.class) --uncomment for native transport
+                .channel(IOUringServerSocketChannel.class) //--uncomment for io_uring
                 .childHandler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     protected void initChannel(SocketChannel socketChannel) throws Exception {
