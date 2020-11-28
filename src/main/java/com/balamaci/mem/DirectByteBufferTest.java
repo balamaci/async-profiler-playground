@@ -2,7 +2,7 @@ package com.balamaci.mem;
 
 import java.nio.ByteBuffer;
 
-public class UnsafeTest {
+public class DirectByteBufferTest {
 
     public static void main(String[] args) throws Exception {
         while (true) {

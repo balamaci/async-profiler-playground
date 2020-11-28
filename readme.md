@@ -15,7 +15,7 @@ start the profiling
 docker exec -ti tested-app profiler.sh -d 30 -s -t -f /tmp/asyncprofiler/cpu.svg 1
 ```
 
-## What we see
+## Profiling Socket code
 
 ### Profiling the blocking echo Server - Client app 
 
@@ -60,3 +60,11 @@ We still see the **_do_syscall_64** which means user->kernel context switch, and
 Next we'll also take a look if we can see anything special with using platform specific Epoll implementation through JNI.
 
 ### Profiling a simple TCP Netty EPoll Client - Server
+
+
+## Profiling working with Files
+### Classical FileOutputStream and FileInputStream 
+
+We see the expected syscalls **read** and **write** being used
+![ClassicFile](https://raw.githubusercontent.com/balamaci/async-profiler-playground/master/file.svg)
+[code]()

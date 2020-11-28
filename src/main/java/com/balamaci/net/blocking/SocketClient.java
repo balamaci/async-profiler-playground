@@ -1,4 +1,4 @@
-package com.balamaci.net;
+package com.balamaci.net.blocking;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

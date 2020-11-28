@@ -67,9 +67,11 @@
                     </to>
                     <container>
 <!--                        <mainClass>com.balamaci.mem.HeapAllocationStart</mainClass>-->
-<!--                        <mainClass>com.balamaci.net.Server</mainClass>-->
+<!--                        <mainClass>com.balamaci.net.blocking.Server</mainClass>-->
                         <mainClass>com.balamaci.net.async.netty.NettyServerStart</mainClass>
-<!--                        <mainClass>com.balamaci.mem.UnsafeTest</mainClass>-->
+<!--                        <mainClass>com.balamaci.mem.DirectByteBufferTest</mainClass>-->
+                        <!-- File -->
+<!--                        <mainClass>com.balamaci.file.ClassicFileWriteTest</mainClass>-->
                         <jvmFlags>
                             <jvmFlag>-XX:+UnlockDiagnosticVMOptions</jvmFlag>
                             <jvmFlag>-XX:+DebugNonSafepoints</jvmFlag>
