@@ -71,5 +71,8 @@ We see the expected syscalls **read** and **write** being used
 If we want to reduce the number of syscalls we should be using buffering like **BufferedOutputStream**.
 
 ### Using mapped memory file
+[Code](https://github.com/balamaci/async-profiler-playground/blob/master/src/main/java/com/balamaci/file/MappedFileTest.java)
 Using memory mapped file results in single syscall to **mmap**, but this seems to be so fast that is not even being caught in the profiling.
 ![MemoryMappedFile](https://raw.githubusercontent.com/balamaci/async-profiler-playground/master/file_mmap.svg)
+There are no other syscalls being used, so no time wasted on copying the kernelspace buffer to userspace buffer.
+However looks we hit some page faults which are to be expected as the memory pages are being 'read' from the disk.
