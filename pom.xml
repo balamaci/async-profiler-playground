@@ -53,6 +53,14 @@
                 </configuration>
             </plugin>
 
+<!--            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <mainClass>com.balamaci.net.async.netty.NettyServerStart</mainClass>
+                </configuration>
+            </plugin>-->
 
             <plugin>
                 <groupId>com.google.cloud.tools</groupId>
@@ -68,10 +76,11 @@
                     <container>
 <!--                        <mainClass>com.balamaci.mem.HeapAllocationStart</mainClass>-->
 <!--                        <mainClass>com.balamaci.net.blocking.Server</mainClass>-->
-                        <mainClass>com.balamaci.net.async.netty.NettyServerStart</mainClass>
+<!--                        <mainClass>com.balamaci.net.async.netty.NettyServerStart</mainClass>-->
 <!--                        <mainClass>com.balamaci.mem.DirectByteBufferTest</mainClass>-->
                         <!-- File -->
 <!--                        <mainClass>com.balamaci.file.ClassicFileWriteTest</mainClass>-->
+                        <mainClass>com.balamaci.file.MappedFileTest</mainClass>
                         <jvmFlags>
                             <jvmFlag>-XX:+UnlockDiagnosticVMOptions</jvmFlag>
                             <jvmFlag>-XX:+DebugNonSafepoints</jvmFlag>

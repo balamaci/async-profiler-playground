@@ -64,7 +64,12 @@ Next we'll also take a look if we can see anything special with using platform s
 
 ## Profiling working with Files
 ### Classical FileOutputStream and FileInputStream 
-
+[Code](https://github.com/balamaci/async-profiler-playground/blob/master/src/main/java/com/balamaci/file/ClassicFileWriteTest.java)
 We see the expected syscalls **read** and **write** being used
 ![ClassicFile](https://raw.githubusercontent.com/balamaci/async-profiler-playground/master/file.svg)
-[code]()
+
+If we want to reduce the number of syscalls we should be using buffering like **BufferedOutputStream**.
+
+### Using mapped memory file
+Using memory mapped file results in single syscall to **mmap**, but this seems to be so fast that is not even being caught in the profiling.
+![MemoryMappedFile](https://raw.githubusercontent.com/balamaci/async-profiler-playground/master/file_mmap.svg)

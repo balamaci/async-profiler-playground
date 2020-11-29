@@ -27,7 +27,7 @@ public class ClassicFileWriteTest {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            },  0, 100, TimeUnit.MILLISECONDS);
+            },  0, 1, TimeUnit.MILLISECONDS);
 
             executorService.scheduleAtFixedRate(() -> {
                 try {

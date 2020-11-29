@@ -15,7 +15,10 @@ public class NettyServerStart {
 
     public static final int PORT = 8081;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
+        System.out.println("Press any key");
+        System.in.read();
+
         // Event loop group to Handle I/O operations for channel
         EventLoopGroup bossGroup = new IOUringEventLoopGroup(1);
         EventLoopGroup workerGroup = new IOUringEventLoopGroup(1);
@@ -23,7 +26,6 @@ public class NettyServerStart {
 //        --uncomment for native transport
 //        EventLoopGroup bossGroup = new EpollEventLoopGroup();
 //        EventLoopGroup workerGroup = new EpollEventLoopGroup();
-
 
         ServerBootstrap serverBootstrap = new ServerBootstrap();
         serverBootstrap
