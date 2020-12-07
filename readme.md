@@ -63,6 +63,7 @@ Next we'll also take a look if we can see anything special with using platform s
 
 
 ### Profiling a simple TCP Netty using io_uring
+![io_uring](https://raw.githubusercontent.com/balamaci/async-profiler-playground/master/.svg)
 *io_uring* works by implementing two queues. There is a **submission queue** and there is a **completion queue**. 
 In the submission queue, you place different operations(like readv or writev) and the file descriptor representing the socket in our case.
 Then invoking the syscall **io_uring_enter**. The kernel pulls the data from the **submission queue** and starts processing, and starts filling the **completion queue** as soon as data is available.
