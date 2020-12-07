@@ -55,12 +55,21 @@ By using **EPoll** is capable of getting notified when certain sockets(actually 
 When we want to write data to the socket, Java NIO makes use of **DirectByteBuffers**. 
 DirectByteBuffer are **native memory** locations(outside of JVM heap) which the GC doesn't move - when compacting memory-(it does keep track of them and can dispose of them when they're no longer referenced) and can be written directly into the socket. 
 
-We still see the **_do_syscall_64** which means user->kernel context switch, and this reduction on context switching is improved on the new [io_uring](https://unixism.net/loti/what_is_io_uring.html) approach and we'll take a look in the future.
+We still see the **_do_syscall_64** which means user->kernel context switch, and this need for constant context switching is improved on the new [io_uring](https://unixism.net/loti/what_is_io_uring.html) approach and we'll take a look in the future.
 
 Next we'll also take a look if we can see anything special with using platform specific Epoll implementation through JNI.
 
 ### Profiling a simple TCP Netty EPoll Client - Server
 
+
+### Profiling a simple TCP Netty using io_uring
+*io_uring* works by implementing two queues. There is a **submission queue** and there is a **completion queue**. 
+In the submission queue, you place different operations(like readv or writev) and the file descriptor representing the socket in our case.
+Then invoking the syscall **io_uring_enter**. The kernel pulls the data from the **submission queue** and starts processing, and starts filling the **completion queue** as soon as data is available.
+So all reduced to using a single syscall **io_uring_enter**.
+In summary, we just need to fill **submission queue** with entries of read and write from sockets, invoke **io_uring_enter** to process them and keep polling on the **completion queue** and implement the callbacks for processing the completing events.  
+
+To run the code however we need 5.9 because the io_uring is so new, the older kernels don't have the interface definition.  
 
 ## Profiling working with Files
 ### Classical FileOutputStream and FileInputStream 
@@ -72,7 +81,7 @@ If we want to reduce the number of syscalls we should be using buffering like **
 
 ### Using mapped memory file
 [Code](https://github.com/balamaci/async-profiler-playground/blob/master/src/main/java/com/balamaci/file/MappedFileTest.java)
-Using memory mapped file results in single syscall to **mmap**, but this seems to be so fast that is not even being caught in the profiling.
-![MemoryMappedFile](https://raw.githubusercontent.com/balamaci/async-profiler-playground/master/file_mmap.svg)
+Using memory mapped file results in single syscall to **mmap**, but this is so fast that is barely being caught in the profiling.
+![MemoryMappedFile](https://raw.githubusercontent.com/balamaci/async-profiler-playground/master/file_mmap2.svg)
 There are no other syscalls being used, so no time wasted on copying the kernelspace buffer to userspace buffer.
 However looks we hit some page faults which are to be expected as the memory pages are being 'read' from the disk.

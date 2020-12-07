@@ -4,24 +4,26 @@ import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
-import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
+import io.netty.incubator.channel.uring.IOUringEventLoopGroup;
+import io.netty.incubator.channel.uring.IOUringSocketChannel;
 
 public class NettyClientStart {
 
     public static void main(String[] args) {
-        EventLoopGroup eventLoopGroup = new NioEventLoopGroup();
+//        EventLoopGroup eventLoopGroup = new NioEventLoopGroup();
 //        EventLoopGroup eventLoopGroup = new EpollEventLoopGroup(); --use instead for native
+        EventLoopGroup eventLoopGroup = new IOUringEventLoopGroup(1);
 
         // Help boot strapping a channel
         Bootstrap clientBootstrap = new Bootstrap();
         clientBootstrap
                 .group(eventLoopGroup) // associate event loop to channel
-//                .channel(EpollSocketChannel.class) -- use instead for native
-                .channel(NioSocketChannel.class)
+//                .channel(NioSocketChannel.class)
+//                .channel(EpollSocketChannel.class) //-- use instead for native
+                .channel(IOUringSocketChannel.class) //-- use io_uring
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     protected void initChannel(SocketChannel socketChannel) throws Exception {

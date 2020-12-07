@@ -16,21 +16,22 @@ public class NettyServerStart {
     public static final int PORT = 8081;
 
     public static void main(String[] args) throws Exception {
-        System.out.println("Press any key");
-        System.in.read();
-
-        // Event loop group to Handle I/O operations for channel
-        EventLoopGroup bossGroup = new IOUringEventLoopGroup(1);
-        EventLoopGroup workerGroup = new IOUringEventLoopGroup(1);
+//        -- nio
+//        EventLoopGroup bossGroup = new NioEventLoopGroup();
+//        EventLoopGroup workerGroup = new NioEventLoopGroup();
 
 //        --uncomment for native transport
 //        EventLoopGroup bossGroup = new EpollEventLoopGroup();
 //        EventLoopGroup workerGroup = new EpollEventLoopGroup();
 
+        // Event loop group to Handle I/O operations for channel
+        EventLoopGroup bossGroup = new IOUringEventLoopGroup(1);
+        EventLoopGroup workerGroup = new IOUringEventLoopGroup(1);
+
         ServerBootstrap serverBootstrap = new ServerBootstrap();
         serverBootstrap
                 .group(bossGroup, workerGroup) // associate event loop to channel
-//                .channel(NioServerSocketChannel.class)
+//                .channel(NioServerSocketChannel.class)  -- nio
 //                .channel(EpollServerSocketChannel.class) --uncomment for native transport
                 .channel(IOUringServerSocketChannel.class) //--uncomment for io_uring
                 .childHandler(new ChannelInitializer<SocketChannel>() {
@@ -41,7 +42,7 @@ public class NettyServerStart {
                         socketChannel.pipeline().addLast(new ServerChannelHandler());
                     }
                 }) // Add channel initializer
-                .childOption(ChannelOption.SO_KEEPALIVE, true);
+                .childOption(ChannelOption.SO_REUSEADDR, true);
 
         try {
             // Connect to listening server

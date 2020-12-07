@@ -17,7 +17,7 @@ public class ServerChannelHandler extends SimpleChannelInboundHandler<String> {
         ScheduledThreadPoolExecutor poolExecutor = new ScheduledThreadPoolExecutor(1);
         poolExecutor.scheduleAtFixedRate(() -> {
             ctx.channel().writeAndFlush(HELLO_STR);
-        }, 100, 500, TimeUnit.MILLISECONDS);
+        }, 100, 50, TimeUnit.MILLISECONDS);
     }
 
     @Override
