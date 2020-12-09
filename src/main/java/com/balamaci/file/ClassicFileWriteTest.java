@@ -35,7 +35,7 @@ public class ClassicFileWriteTest {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            },  TimeUnit.SECONDS.toMillis(10), 100, TimeUnit.MILLISECONDS);
+            },  TimeUnit.SECONDS.toMillis(10), 1, TimeUnit.MILLISECONDS);
 
             Thread.sleep(TimeUnit.MINUTES.toMillis(10));
             executorService.shutdown();

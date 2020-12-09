@@ -76,7 +76,7 @@ To run the code however we need 5.9 because the io_uring is so new, the older ke
 ### Classical FileOutputStream and FileInputStream 
 [Code](https://github.com/balamaci/async-profiler-playground/blob/master/src/main/java/com/balamaci/file/ClassicFileWriteTest.java)
 We see the expected syscalls **read** and **write** being used
-![ClassicFile](https://raw.githubusercontent.com/balamaci/async-profiler-playground/master/file.svg)
+![ClassicFile](https://raw.githubusercontent.com/balamaci/async-profiler-playground/master/classic_rw_file.svg)
 
 If we want to reduce the number of syscalls we should be using buffering like **BufferedOutputStream**.
 
